@@ -2,4 +2,4 @@
 *.ipynb_checkpoints
 
 # ignorar carpeta "datos"
-#datos/
+datos/
