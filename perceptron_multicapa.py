@@ -7,7 +7,7 @@ def func_sigmoidea(x):
     return 1 / (1 + np.exp(-x))
 
 # -------------------- # función de entrenamiento # ---------------------- #
-def proceso_entrenamiento(x, d, w_h, w_o, alfa, precision):
+def proceso_entrenamiento(x, d, w_h, w_o, Q, alfa, precision):
     """
     Genera los pesos del perceptrón multicapa.
 
@@ -17,6 +17,14 @@ def proceso_entrenamiento(x, d, w_h, w_o, alfa, precision):
         Matriz de entradas.
     d : np.ndarray
         Matriz de salidas deseadas.
+    Q : int
+        Número de filas de la matriz de entradas.
+    N : int
+        Número de entradas.
+    L : int
+        Número de neuronas en la capa oculta.
+    M : int
+        Número de neuronas en la capa de salida.
     w_h : np.ndarray
         Matriz de pesos de la capa oculta.
     w_o : np.ndarray
@@ -34,10 +42,12 @@ def proceso_entrenamiento(x, d, w_h, w_o, alfa, precision):
         Matriz de pesos de la capa de salida.
     """
     # Procedimiento de entrenamiento
-    E = float('inf')
+    E, epoca = float('inf') , 0
 
-    while E > precision:
+    while E > precision and epoca < 1000:
+        epoca += 1
         E = 0
+
         for j in range(Q):
             # proceso forward
             net_h = np.dot(w_h, x[j].T)
@@ -56,14 +66,14 @@ def proceso_entrenamiento(x, d, w_h, w_o, alfa, precision):
             w_h = w_h + Delta_w_h
 
             # Acumulando el error
-            E += np.linalg.norm(delta_o)
+        E += np.linalg.norm(delta_o)
 
-        print(f'error: {E}')
+        #print(f'época: {epoca}', f'error: {E}')
 
     return w_h, w_o 
 
 # ------------ # función de prueba de funcionamiento # --------------- #
-def proceso_funcionamiento(x, w_h, w_o):
+def proceso_funcionamiento(x, Q, M, w_h, w_o):
     """
     Desarrolla el proceso de funcionamiento del perceptrón multicapa, incluyendo nuevas entradas con
     los pesos ya entrenados.
@@ -72,6 +82,10 @@ def proceso_funcionamiento(x, w_h, w_o):
     ----------
     x : np.ndarray
         Matriz de entradas.
+    Q : int
+        Número de filas de la matriz de entradas.
+    M : int
+        Número de neuronas en la capa de salida.
     w_h : np.ndarray
         Matriz de pesos de la capa oculta.
     w_o : np.ndarray
